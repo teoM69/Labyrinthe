@@ -90,7 +90,7 @@ int main(void)
         { // création labyrinthe
             for (int i = 0; i < colonnes; i++)
             {
-                int caractereNb = rand() % 2 > 0 ? 1 : 0; // probabilité d'avoir un mur de 1/5 (pas parfait)
+                int caractereNb = rand() % 2;
                 labyrinthe[j][i] = CARACTERES[caractereNb];
             }
         }
