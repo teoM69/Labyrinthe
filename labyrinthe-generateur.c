@@ -74,7 +74,7 @@ int main(void)
         }
         else if (modeDim == 2)
         {
-            printf("Entrez la longueur du labyrinthe (nombre de colonnes)\n");
+
             scanf("%d", &colonnes);
             printf("Entrez la largeur du labyrinthe (nombre de lignes)\n");
             scanf("%d", &lignes);
