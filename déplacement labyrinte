@@ -2,6 +2,7 @@
 
 int main(){
      int x,y ;
+     int chemin[x][y];
     char deplacement , position = labyrinthe[0][0]  ;
     labyrinthe[0][0] = D ;
     
@@ -10,7 +11,7 @@ int main(){
          scanf("%c",&deplacement);
         switch (deplacement){
             case z:
-                if (position == labyrinthe[0][y]){
+                if (x == 0){
                     printf("déplacement impossible");
                 }
                 else if (labyrinthe[x-1][y] == #){
@@ -18,11 +19,11 @@ int main(){
                 }    
                 else (){
                     position = labyrinthe[x-1][y];
-                    labyrinthe[x][y] = | ;
+                    chemin[x][y] = | ;
                     printf(le labyrinthe);
                 };break;
             case q:
-                if (position == labyrinthe[x][0]){
+                if (y == 0){
                     printf("déplacement impossible");                
             }
                 else if (labyrinthe[x][y-1] == #){
@@ -30,11 +31,11 @@ int main(){
                 }
                 else(){
                      position = labyrinthe[x-1][y];
-                    labyrinthe[x][y] = ― ;
+                    chemin[x][y] = ― ;
                     printf(le labyrinthe);
                 };break;
             case s:
-                if (position == labyrinthe[lignes][y]){
+                if (x == lignes){
                     printf("déplacement impossible");
                 }
                 else if (labyrinthe[x][y+1] == #){
@@ -42,11 +43,11 @@ int main(){
                 }
                 else (){
                     position = labyrinthe[x][y+1];
-                    labyrinthe[x][y] = | ;
+                    chemin[x][y] = | ;
                     printf(le labyrinthe);
                 };break;
             case d:
-                if (position == labyrinthe[x][colonnes]){
+                if (y == colonnes){
                     printf("déplacement impossible");                
                 }
                 else if (labyrinthe[x][y+1] == #){
@@ -54,7 +55,7 @@ int main(){
                 }
                 else (){
                     position = labyrinthe[x][y+1];
-                    labyrinthe[x][y] = ― ;
+                    chemin[x][y] = ― ;
                     printf(le labyrinthe);
                 };break;
             default:
