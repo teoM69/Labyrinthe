@@ -2,24 +2,37 @@
 #include <time.h>
 #include <stdlib.h>
 
-int colonnes, lignes;
+int nbColonnes, nbLignes;
 #define MAX_SIZE 20
 
 int testResolvableRecursive(char labyrinthe[MAX_SIZE][MAX_SIZE], int caseVerif[MAX_SIZE][MAX_SIZE], int x, int y)
 {
-    if (x < 0 || x >= colonnes || y < 0 || y >= lignes)
+    if (x < 0 || x >= nbColonnes || y < 0 || y >= nbLignes || labyrinthe[y][x] == '#' || caseVerif[y][x] == 1)
         return 0;
-    if (labyrinthe[y][x] == '#' || caseVerif[y][x] == 1)
-        return 0;
-    if (x == colonnes - 1 && y == lignes - 1)
+
+    if (x == nbColonnes - 1 && y == nbLignes - 1)
         return 1;
+
     caseVerif[y][x] = 1;
-    if (testResolvableRecursive(labyrinthe, caseVerif, x + 1, y) ||
-        testResolvableRecursive(labyrinthe, caseVerif, x - 1, y) ||
-        testResolvableRecursive(labyrinthe, caseVerif, x, y + 1) ||
-        testResolvableRecursive(labyrinthe, caseVerif, x, y - 1))
+
+    int longueurs[4];
+    longueurs[0] = testResolvableRecursive(labyrinthe, caseVerif, x + 1, y);
+    longueurs[1] = testResolvableRecursive(labyrinthe, caseVerif, x - 1, y);
+    longueurs[2] = testResolvableRecursive(labyrinthe, caseVerif, x, y + 1);
+    longueurs[3] = testResolvableRecursive(labyrinthe, caseVerif, x, y - 1);
+
+    int minLongueur = 0;
+    for (int i = 0; i < 4; i++)
     {
-        return 1;
+        if (longueurs[i] > 0 && (minLongueur == 0 || longueurs[i] < minLongueur))
+        {
+            minLongueur = longueurs[i];
+        }
+    }
+    caseVerif[y][x] = 0; // pour pouvoir passer par la case lors des futurs chemins
+    if (minLongueur > 0)
+    {
+        return minLongueur + 1;
     }
     return 0;
 }
@@ -27,9 +40,9 @@ int testResolvableRecursive(char labyrinthe[MAX_SIZE][MAX_SIZE], int caseVerif[M
 int testResolvable(char labyrinthe[MAX_SIZE][MAX_SIZE])
 {
     int caseVerif[MAX_SIZE][MAX_SIZE];
-    for (int j = 0; j < lignes; j++)
+    for (int j = 0; j < nbLignes; j++)
     {
-        for (int i = 0; i < colonnes; i++)
+        for (int i = 0; i < nbColonnes; i++)
         {
             caseVerif[j][i] = 0;
         }
@@ -43,9 +56,9 @@ void labyFichierTxt(char labyrinthe[MAX_SIZE][MAX_SIZE])
     flux = fopen("labyrinthe.txt", "w");
     if (flux != NULL)
     {
-        for (int j = 0; j < lignes; j++)
+        for (int j = 0; j < nbLignes; j++)
         {
-            for (int i = 0; i < colonnes; i++)
+            for (int i = 0; i < nbColonnes; i++)
             {
                 fprintf(flux, "%c", labyrinthe[j][i]); // mettre "%c" car fprintf a pour argument une chaine de caractere et pas un char
             }
@@ -58,20 +71,20 @@ void labyFichierTxt(char labyrinthe[MAX_SIZE][MAX_SIZE])
 int compterImpasses(char labyrinthe[MAX_SIZE][MAX_SIZE])
 {
     int impasses = 0;
-    for (int y = 0; y < lignes; y++)
+    for (int y = 0; y < nbLignes; y++)
     {
-        for (int x = 0; x < colonnes; x++)
+        for (int x = 0; x < nbColonnes; x++)
         {
             if (labyrinthe[y][x] == '.')
             {
                 int voisins = 0;
                 if (x > 0 && labyrinthe[y][x - 1] == '.')
                     voisins++;
-                if (x < colonnes - 1 && labyrinthe[y][x + 1] == '.')
+                if (x < nbColonnes - 1 && labyrinthe[y][x + 1] == '.')
                     voisins++;
                 if (y > 0 && labyrinthe[y - 1][x] == '.')
                     voisins++;
-                if (y < lignes - 1 && labyrinthe[y + 1][x] == '.')
+                if (y < nbLignes - 1 && labyrinthe[y + 1][x] == '.')
                     voisins++;
 
                 if (voisins == 1)
@@ -84,39 +97,12 @@ int compterImpasses(char labyrinthe[MAX_SIZE][MAX_SIZE])
     return impasses;
 }
 
-// Calcule la longueur d'un chemin possible (simple suivi)
-int calculerLongueurChemin(char labyrinthe[MAX_SIZE][MAX_SIZE])
-{
-    int caseVerif[MAX_SIZE][MAX_SIZE] = {0};
-    int longueur = 0;
-    int x = 0, y = 0;
-
-    while (x != colonnes - 1 || y != lignes - 1)
-    {
-        caseVerif[y][x] = 1;
-        if (x < colonnes - 1 && labyrinthe[y][x + 1] == '.' && !caseVerif[y][x + 1])
-            x++;
-        else if (y < lignes - 1 && labyrinthe[y + 1][x] == '.' && !caseVerif[y + 1][x])
-            y++;
-        else if (x > 0 && labyrinthe[y][x - 1] == '.' && !caseVerif[y][x - 1])
-            x--;
-        else if (y > 0 && labyrinthe[y - 1][x] == '.' && !caseVerif[y - 1][x])
-            y--;
-        else
-            break;
-        longueur++;
-    }
-    return longueur;
-}
-
 // Evalue la difficulté du labyrinthe
-void evaluerDifficulte(char labyrinthe[MAX_SIZE][MAX_SIZE])
+void evaluerDifficulte(char labyrinthe[MAX_SIZE][MAX_SIZE], int longueurChemin)
 {
     int impasses = compterImpasses(labyrinthe);
-    int longueurChemin = calculerLongueurChemin(labyrinthe);
 
     printf("Nombre d'impasses: %d\n", impasses);
-    printf("Longueur du chemin resolu: %d\n", longueurChemin);
 
     int difficulte = impasses + longueurChemin;
     if (difficulte < 15)
@@ -147,55 +133,55 @@ int main(void)
         scanf("%d", &modeDim);
         if (modeDim == 1)
         {
-            colonnes = rand() % 7 + 5;
-            lignes = rand() % 7 + 5;
+            nbColonnes = rand() % 7 + 5;
+            nbLignes = rand() % 7 + 5;
         }
         else if (modeDim == 2)
         {
-            while (colonnes < 1 || colonnes > 20)
+            while (nbColonnes < 1 || nbColonnes > 20)
             {
-                printf("Entrez la longueur du labyrinthe (nombre de lignes, maximum 20)\n");
-                scanf("%d", &colonnes);
+                printf("Entrez la longueur du labyrinthe (nombre de nbLignes, maximum 20)\n");
+                scanf("%d", &nbColonnes);
             }
-            while (lignes < 1 || lignes > 20)
+            while (nbLignes < 1 || nbLignes > 20)
             {
-                printf("Entrez la largeur du labyrinthe (nombre de lignes, maximum 20)\n");
-                scanf("%d", &lignes);
+                printf("Entrez la largeur du labyrinthe (nombre de nbLignes, maximum 20)\n");
+                scanf("%d", &nbLignes);
             }
         }
     }
-    printf("%d  %d \n", colonnes, lignes);
+    printf("%d  %d \n", nbColonnes, nbLignes);
     char labyrinthe[MAX_SIZE][MAX_SIZE];
     char CARACTERES[2] = {'#', '.'}; // #:mur   .: vide   potentiellement à modifier
-    int resolvable = 0;
-    while (resolvable == 0)
+    int longueurChemin = 0;
+    while (longueurChemin == 0)
     {
-        for (int j = 0; j < lignes; j++)
+        for (int j = 0; j < nbLignes; j++)
         { // création labyrinthe
-            for (int i = 0; i < colonnes; i++)
+            for (int i = 0; i < nbColonnes; i++)
             {
                 int caractereNb = rand() % 2;
                 labyrinthe[j][i] = CARACTERES[caractereNb];
             }
         }
         labyrinthe[0][0] = '.';
-        labyrinthe[colonnes - 1][lignes - 1] = '.';
+        labyrinthe[nbColonnes - 1][nbLignes - 1] = '.';
 
         labyFichierTxt(labyrinthe);
 
         // test de resolvabilité
-        resolvable = testResolvable(labyrinthe);
+        longueurChemin = testResolvable(labyrinthe);
     }
     labyFichierTxt(labyrinthe);
-    printf("Voici votre labyrinthe\n"); // affichage du labyrinthe
-    for (int j = 0; j < lignes; j++)
+    printf("Voici votre labyrinthe (resolvable en %d mouvements minimum)\n", longueurChemin - 1); // affichage du labyrinthe
+    for (int j = 0; j < nbLignes; j++)
     {
-        for (int i = 0; i < colonnes; i++)
+        for (int i = 0; i < nbColonnes; i++)
         {
             printf(" %c ", labyrinthe[j][i]); // espace entre chaque caractère
         }
         printf("\n");
     }
-    evaluerDifficulte(labyrinthe);
+    evaluerDifficulte(labyrinthe, longueurChemin);
     return 0;
 }
