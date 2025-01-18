@@ -140,12 +140,12 @@ int main(void)
         {
             while (nbColonnes < 1 || nbColonnes > 20)
             {
-                printf("Entrez la longueur du labyrinthe (nombre de nbLignes, maximum 20)\n");
+                printf("Entrez la longueur du labyrinthe (nombre de colonnes, maximum 20)\n");
                 scanf("%d", &nbColonnes);
             }
             while (nbLignes < 1 || nbLignes > 20)
             {
-                printf("Entrez la largeur du labyrinthe (nombre de nbLignes, maximum 20)\n");
+                printf("Entrez la largeur du labyrinthe (nombre de lignes, maximum 20)\n");
                 scanf("%d", &nbLignes);
             }
         }
