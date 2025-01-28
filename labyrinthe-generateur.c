@@ -167,8 +167,6 @@ int main(void)
         labyrinthe[0][0] = '.';
         labyrinthe[nbLignes - 1][nbColonnes - 1] = '.';
 
-        labyFichierTxt(labyrinthe);
-
         // test de resolvabilité
         longueurChemin = testResolvable(labyrinthe);
     }
