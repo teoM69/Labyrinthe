@@ -165,7 +165,7 @@ int main(void)
             }
         }
         labyrinthe[0][0] = '.';
-        labyrinthe[nbColonnes - 1][nbLignes - 1] = '.';
+        labyrinthe[nbLignes - 1][nbColonnes - 1] = '.';
 
         labyFichierTxt(labyrinthe);
 
@@ -183,5 +183,7 @@ int main(void)
         printf("\n");
     }
     evaluerDifficulte(labyrinthe, longueurChemin);
+    printf("Entrez un caractere pour quitter...\n");
+    scanf("%d"); // pas mettre %c car il va prendre le \n du terminal
     return 0;
 }

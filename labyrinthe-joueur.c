@@ -107,7 +107,7 @@ int main(void)
             }
             else
             {
-                printf("Deplacement impossible\n");
+                printf("\nDeplacement impossible\n");
             }
             break;
         case 'q':
@@ -119,7 +119,7 @@ int main(void)
             }
             else
             {
-                printf("Deplacement impossible\n");
+                printf("\nDeplacement impossible\n");
             }
             break;
 
@@ -132,7 +132,7 @@ int main(void)
             }
             else
             {
-                printf("Deplacement impossible\n");
+                printf("\nDeplacement impossible\n");
             }
             break;
         case 'd':
@@ -144,7 +144,7 @@ int main(void)
             }
             else
             {
-                printf("Deplacement impossible\n");
+                printf("\nDeplacement impossible\n");
             }
             break;
         }
@@ -152,5 +152,7 @@ int main(void)
     }
 
     printf("Bravo, vous avez gagne !\n");
+    printf("Entrez un caractere pour quitter...\n");
+    scanf("%d"); // pas mettre %c car il va prendre le \n du terminal
     return 0;
 }
