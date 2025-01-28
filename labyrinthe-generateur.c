@@ -75,7 +75,7 @@ int compterImpasses(char labyrinthe[MAX_SIZE][MAX_SIZE])
     {
         for (int x = 0; x < nbColonnes; x++)
         {
-            if (labyrinthe[y][x] == '.')
+            if (labyrinthe[y][x] == '.' && (x != 0 || y != 0) && (x != nbColonnes - 1 || y != nbLignes - 1))
             {
                 int voisins = 0;
                 if (x > 0 && labyrinthe[y][x - 1] == '.')
