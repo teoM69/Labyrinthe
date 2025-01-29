@@ -99,7 +99,7 @@ int main(void)
         switch (deplacement)
         {
         case 'z':
-            if (y > 0 && labyrinthe[y - 1][x] != '#')
+            if (casesHaut > 0)
             {
                 cheminParcouru[y][x] = '|';
                 y--;
@@ -111,7 +111,7 @@ int main(void)
             }
             break;
         case 'q':
-            if (x > 0 && labyrinthe[y][x - 1] != '#')
+            if (casesGauche > 0)
             {
                 cheminParcouru[y][x] = '-';
                 x--;
@@ -124,7 +124,7 @@ int main(void)
             break;
 
         case 's':
-            if (y < nbLignes - 1 && labyrinthe[y + 1][x] != '#')
+            if (casesBas > 0)
             {
                 cheminParcouru[y][x] = '|';
                 y++;
@@ -136,7 +136,7 @@ int main(void)
             }
             break;
         case 'd':
-            if (x < nbColonnes - 1 && labyrinthe[y][x + 1] != '#')
+            if (casesDroite > 0)
             {
                 cheminParcouru[y][x] = '-';
                 x++;
